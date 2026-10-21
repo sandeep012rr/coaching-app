@@ -1,0 +1,42 @@
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+    <h2 class="text-base font-bold text-blue-800 flex items-center gap-1.5 mb-3">
+        <span class="material-symbols-outlined">quiz</span> Add Question to a Test
+    </h2>
+    <form method="POST" class="space-y-3 text-xs">
+        <input type="hidden" name="action" value="add_question">
+        <div>
+            <label class="block font-bold text-slate-700 mb-1">Select Test:</label>
+            <select name="test_id" class="w-full border rounded-lg p-2 text-xs font-semibold" required>
+                {% for t in tests %}
+                <option value="{{ t.id }}">{{ t.title }} (Abhi {{ t.questions|length }} sawal)</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block font-bold text-slate-700 mb-1">Question Text:</label>
+            <textarea name="question" rows="2" placeholder="Sawal yahan likhein..." class="w-full border rounded-lg p-2" required></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+            <input type="text" name="opt_a" placeholder="Option (A)" class="border rounded p-2" required>
+            <input type="text" name="opt_b" placeholder="Option (B)" class="border rounded p-2" required>
+            <input type="text" name="opt_c" placeholder="Option (C)" class="border rounded p-2" required>
+            <input type="text" name="opt_d" placeholder="Option (D)" class="border rounded p-2" required>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Correct Option:</label>
+                <select name="answer" class="w-full border rounded p-2 font-bold uppercase" required>
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                    <option value="d">D</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-bold text-slate-700 mb-1">Solution / Explanation:</label>
+                <input type="text" name="solution" placeholder="Puri vyakhya..." class="w-full border rounded p-2">
+            </div>
+        </div>
+        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-lg">Add Question</button>
+    </form>
+</div>
