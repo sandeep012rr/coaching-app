@@ -1,13 +1,12 @@
 import os
 import json
-from flask import Flask, render_template, render_template_string, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = "special_education_needs_secret_2026"
 
 ADMIN_PASSWORD = "admin123"
 
-# Direct files bina sub-folders ke taaki path error na aaye
 TESTS_FILE = 'tests.json'
 CONFIG_FILE = 'config.json'
 COURSES_FILE = 'courses.json'
@@ -49,7 +48,11 @@ DEFAULT_CONFIG = {
     "live_url": "https://www.youtube-nocookie.com/embed/live_stream",
     "is_live": True,
     "contact_phone": "9828625119",
-    "channel_code": "0029VbBrZUT6LwHeVGFnvl3Q"
+    "channel_code": "0029VbBrZUT6LwHeVGFnvl3Q",
+    "slider_images": [
+        "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&auto=format&fit=crop"
+    ]
 }
 
 @app.route('/')
@@ -58,11 +61,7 @@ def home():
     tests = load_json(TESTS_FILE, [])
     config = load_json(CONFIG_FILE, DEFAULT_CONFIG)
     courses = load_json(COURSES_FILE, DEFAULT_COURSES)
-    try:
-        return render_template('index.html', tests=tests, config=config, courses=courses, student=user)
-    except Exception as e:
-        # Fallback taaki Internal Server Error na aaye
-        return f"<h3>Templates Loading Error:</h3><pre>{str(e)}</pre><p>Kripya Render Logs check karein.</p>"
+    return render_template('index.html', tests=tests, config=config, courses=courses, student=user)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -89,10 +88,7 @@ def login():
                 return redirect(url_for('home'))
             return render_template('login.html', error="Mobile Number ya Password galat hai!")
 
-    try:
-        return render_template('login.html')
-    except Exception as e:
-        return f"Login Template Error: {e}"
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
@@ -107,10 +103,7 @@ def take_test(test_id):
     target = next((t for t in tests if t.get('id') == test_id), None)
     if not target:
         return "Test nahi mila!", 404
-    try:
-        return render_template('test.html', test=target, student=session.get('student_user'))
-    except Exception as e:
-        return f"Test Template Error: {e}"
+    return render_template('test.html', test=target, student=session.get('student_user'))
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -121,10 +114,7 @@ def admin():
         return render_template('admin.html', logged_in=False, error="Galat Admin Password!")
 
     if not session.get('is_admin'):
-        try:
-            return render_template('admin.html', logged_in=False)
-        except Exception as e:
-            return f"Admin Template Error: {e}"
+        return render_template('admin.html', logged_in=False)
 
     tests = load_json(TESTS_FILE, [])
     config = load_json(CONFIG_FILE, DEFAULT_CONFIG)
@@ -134,6 +124,7 @@ def admin():
     if request.method == 'POST':
         action = request.form.get('action')
 
+        # 1. Update Live Class
         if action == 'update_live':
             raw_url = request.form.get('live_url', '').strip()
             video_id = ""
@@ -149,6 +140,24 @@ def admin():
             config['is_live'] = 'is_live' in request.form
             save_json(CONFIG_FILE, config)
 
+        # 2. Add Slider Image from Admin
+        elif action == 'add_slider_img':
+            img_url = request.form.get('img_url', '').strip()
+            if img_url:
+                if 'slider_images' not in config:
+                    config['slider_images'] = []
+                if len(config['slider_images']) < 10:
+                    config['slider_images'].append(img_url)
+                    save_json(CONFIG_FILE, config)
+
+        # 3. Delete Slider Image
+        elif action == 'delete_slider_img':
+            img_index = int(request.form.get('img_index'))
+            if 'slider_images' in config and 0 <= img_index < len(config['slider_images']):
+                config['slider_images'].pop(img_index)
+                save_json(CONFIG_FILE, config)
+
+        # 4. Create New Test
         elif action == 'create_test':
             new_test = {
                 "id": len(tests) + 1,
@@ -159,6 +168,7 @@ def admin():
             tests.append(new_test)
             save_json(TESTS_FILE, tests)
 
+        # 5. Add Question to Test
         elif action == 'add_question':
             test_id = int(request.form.get('test_id'))
             for t in tests:
@@ -177,6 +187,7 @@ def admin():
                     break
             save_json(TESTS_FILE, tests)
 
+        # 6. Update Course Coupon / Price
         elif action == 'update_course':
             c_id = int(request.form.get('course_id'))
             for c in courses:
@@ -187,6 +198,7 @@ def admin():
                     break
             save_json(COURSES_FILE, courses)
 
+        # 7. Delete Test
         elif action == 'delete_test':
             t_id = int(request.form.get('test_id'))
             tests = [t for t in tests if t['id'] != t_id]
@@ -204,4 +216,3 @@ def admin_logout():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-                            
