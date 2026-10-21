@@ -74,7 +74,7 @@ def login():
         if action == 'register':
             name = request.form.get('name', '').strip()
             if any(u.get('phone') == phone for u in users):
-                return render_template('login.html', error="Yeh Mobile Number pehle se registered hai! Login karein.")
+                return render_template('login.html', error="Mobile number pehle se registered hai!")
             new_user = {"name": name, "phone": phone, "password": password}
             users.append(new_user)
             save_json(USERS_FILE, users)
@@ -105,6 +105,7 @@ def take_test(test_id):
         return "Test nahi mila!", 404
     return render_template('test.html', test=target, student=session.get('student_user'))
 
+# Admin Control Panel
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST' and request.form.get('action') == 'login':
@@ -124,8 +125,25 @@ def admin():
     if request.method == 'POST':
         action = request.form.get('action')
 
-        # 1. Update Live Class
-        if action == 'update_live':
+        # 1. Slider me image add karna
+        if action == 'add_slider_img':
+            img_url = request.form.get('img_url', '').strip()
+            if img_url:
+                if 'slider_images' not in config:
+                    config['slider_images'] = []
+                if len(config['slider_images']) < 10:
+                    config['slider_images'].append(img_url)
+                    save_json(CONFIG_FILE, config)
+
+        # 2. Slider se image hatana
+        elif action == 'delete_slider_img':
+            img_index = int(request.form.get('img_index'))
+            if 'slider_images' in config and 0 <= img_index < len(config['slider_images']):
+                config['slider_images'].pop(img_index)
+                save_json(CONFIG_FILE, config)
+
+        # 3. Live video stream update karna
+        elif action == 'update_live':
             raw_url = request.form.get('live_url', '').strip()
             video_id = ""
             if "watch?v=" in raw_url:
@@ -140,24 +158,7 @@ def admin():
             config['is_live'] = 'is_live' in request.form
             save_json(CONFIG_FILE, config)
 
-        # 2. Add Slider Image from Admin
-        elif action == 'add_slider_img':
-            img_url = request.form.get('img_url', '').strip()
-            if img_url:
-                if 'slider_images' not in config:
-                    config['slider_images'] = []
-                if len(config['slider_images']) < 10:
-                    config['slider_images'].append(img_url)
-                    save_json(CONFIG_FILE, config)
-
-        # 3. Delete Slider Image
-        elif action == 'delete_slider_img':
-            img_index = int(request.form.get('img_index'))
-            if 'slider_images' in config and 0 <= img_index < len(config['slider_images']):
-                config['slider_images'].pop(img_index)
-                save_json(CONFIG_FILE, config)
-
-        # 4. Create New Test
+        # 4. Naya test series banana
         elif action == 'create_test':
             new_test = {
                 "id": len(tests) + 1,
@@ -168,7 +169,7 @@ def admin():
             tests.append(new_test)
             save_json(TESTS_FILE, tests)
 
-        # 5. Add Question to Test
+        # 5. Sawal jodna
         elif action == 'add_question':
             test_id = int(request.form.get('test_id'))
             for t in tests:
@@ -187,7 +188,7 @@ def admin():
                     break
             save_json(TESTS_FILE, tests)
 
-        # 6. Update Course Coupon / Price
+        # 6. Course price aur coupon set karna
         elif action == 'update_course':
             c_id = int(request.form.get('course_id'))
             for c in courses:
@@ -198,7 +199,7 @@ def admin():
                     break
             save_json(COURSES_FILE, courses)
 
-        # 7. Delete Test
+        # 7. Test delete karna
         elif action == 'delete_test':
             t_id = int(request.form.get('test_id'))
             tests = [t for t in tests if t['id'] != t_id]
