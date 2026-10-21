@@ -1,0 +1,18 @@
+<div id="info-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-3">
+        <h4 id="modal-title" class="font-bold text-slate-800 text-base"></h4>
+        <div id="modal-body" class="text-xs text-slate-600 space-y-2 max-h-60 overflow-y-auto"></div>
+        <button onclick="closeModal()" class="w-full bg-blue-600 text-white text-xs font-bold py-2.5 rounded-xl">Close</button>
+    </div>
+</div>
+
+<script>
+    function openCoursesModal() { document.getElementById('courses-modal').classList.remove('hidden'); }
+    function closeCoursesModal() { document.getElementById('courses-modal').classList.add('hidden'); }
+    function openModal(t, b) {
+        document.getElementById('modal-title').innerHTML = t;
+        document.getElementById('modal-body').innerHTML = b;
+        document.getElementById('info-modal').classList.remove('hidden');
+    }
+    function closeModal() { document.getElementById('info-modal').classList.add('hidden'); }
+</script>
