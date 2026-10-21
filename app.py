@@ -1,35 +1,37 @@
 import os
 import json
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, render_template_string, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = "special_education_needs_secret_2026"
 
 ADMIN_PASSWORD = "admin123"
 
-# Database Directory
-DB_DIR = "database"
-if not os.path.exists(DB_DIR):
-    os.makedirs(DB_DIR)
-
-TESTS_FILE = os.path.join(DB_DIR, 'tests.json')
-CONFIG_FILE = os.path.join(DB_DIR, 'config.json')
-COURSES_FILE = os.path.join(DB_DIR, 'courses.json')
-USERS_FILE = os.path.join(DB_DIR, 'users.json')
+# Direct files bina sub-folders ke taaki path error na aaye
+TESTS_FILE = 'tests.json'
+CONFIG_FILE = 'config.json'
+COURSES_FILE = 'courses.json'
+USERS_FILE = 'users.json'
 
 def load_json(filepath, default_data):
     if not os.path.exists(filepath):
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump(default_data, f, ensure_ascii=False, indent=2)
-    with open(filepath, 'r', encoding='utf-8') as f:
         try:
-            return json.load(f)
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(default_data, f, ensure_ascii=False, indent=2)
         except Exception:
             return default_data
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return default_data
 
 def save_json(filepath, data):
-    with open(filepath, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    try:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print("Save Error:", e)
 
 DEFAULT_COURSES = [
     {"id": 1, "title": "SPECIAL EDUCATION MCQ BATCH", "price": 1199, "orig_price": 2199, "discount": "45.48% off", "coupon": "", "badge": "New"},
@@ -56,7 +58,11 @@ def home():
     tests = load_json(TESTS_FILE, [])
     config = load_json(CONFIG_FILE, DEFAULT_CONFIG)
     courses = load_json(COURSES_FILE, DEFAULT_COURSES)
-    return render_template('index.html', tests=tests, config=config, courses=courses, student=user)
+    try:
+        return render_template('index.html', tests=tests, config=config, courses=courses, student=user)
+    except Exception as e:
+        # Fallback taaki Internal Server Error na aaye
+        return f"<h3>Templates Loading Error:</h3><pre>{str(e)}</pre><p>Kripya Render Logs check karein.</p>"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,7 +74,7 @@ def login():
 
         if action == 'register':
             name = request.form.get('name', '').strip()
-            if any(u['phone'] == phone for u in users):
+            if any(u.get('phone') == phone for u in users):
                 return render_template('login.html', error="Yeh Mobile Number pehle se registered hai! Login karein.")
             new_user = {"name": name, "phone": phone, "password": password}
             users.append(new_user)
@@ -77,13 +83,16 @@ def login():
             return redirect(url_for('home'))
 
         elif action == 'login':
-            user = next((u for u in users if u['phone'] == phone and u['password'] == password), None)
+            user = next((u for u in users if u.get('phone') == phone and u.get('password') == password), None)
             if user:
                 session['student_user'] = user
                 return redirect(url_for('home'))
             return render_template('login.html', error="Mobile Number ya Password galat hai!")
 
-    return render_template('login.html')
+    try:
+        return render_template('login.html')
+    except Exception as e:
+        return f"Login Template Error: {e}"
 
 @app.route('/logout')
 def logout():
@@ -95,10 +104,13 @@ def take_test(test_id):
     if not session.get('student_user'):
         return redirect(url_for('login'))
     tests = load_json(TESTS_FILE, [])
-    target = next((t for t in tests if t['id'] == test_id), None)
+    target = next((t for t in tests if t.get('id') == test_id), None)
     if not target:
         return "Test nahi mila!", 404
-    return render_template('test.html', test=target, student=session.get('student_user'))
+    try:
+        return render_template('test.html', test=target, student=session.get('student_user'))
+    except Exception as e:
+        return f"Test Template Error: {e}"
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -109,7 +121,10 @@ def admin():
         return render_template('admin.html', logged_in=False, error="Galat Admin Password!")
 
     if not session.get('is_admin'):
-        return render_template('admin.html', logged_in=False)
+        try:
+            return render_template('admin.html', logged_in=False)
+        except Exception as e:
+            return f"Admin Template Error: {e}"
 
     tests = load_json(TESTS_FILE, [])
     config = load_json(CONFIG_FILE, DEFAULT_CONFIG)
@@ -189,4 +204,4 @@ def admin_logout():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-    
+                            
