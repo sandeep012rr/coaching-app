@@ -11,170 +11,169 @@
 
     {% if not logged_in %}
     <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center space-y-5 border border-slate-200">
-            <div class="w-16 h-16 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center mx-auto">
-                <span class="material-symbols-outlined text-3xl">lock</span>
-            </div>
-            <div>
-                <h2 class="text-xl font-bold text-slate-900">Admin Authentication</h2>
-                <p class="text-xs text-slate-500 mt-1">Special Education Needs School</p>
-            </div>
-            {% if error %}
-            <div class="bg-red-50 text-red-600 text-xs p-2 rounded-lg font-semibold">{{ error }}</div>
-            {% endif %}
-            <form method="POST" class="space-y-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center space-y-4 border">
+            <h2 class="text-xl font-bold">Admin Login</h2>
+            {% if error %}<p class="text-red-600 text-xs font-bold">{{ error }}</p>{% endif %}
+            <form method="POST" class="space-y-3">
                 <input type="hidden" name="action" value="login">
-                <input type="password" name="password" placeholder="Enter Admin Password (admin123)" class="w-full border rounded-xl p-3 text-sm focus:outline-blue-600" required>
-                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl text-sm transition">
-                    Unlock Dashboard
-                </button>
+                <input type="password" name="password" placeholder="Password (admin123)" class="w-full border rounded-xl p-3 text-sm" required>
+                <button type="submit" class="w-full bg-blue-700 text-white font-bold py-3 rounded-xl text-sm">Login</button>
             </form>
-            <a href="/" class="text-xs text-slate-400 hover:text-slate-600 block">&larr; Return to Student App</a>
+            <a href="/" class="text-xs text-slate-400 block">&larr; Back to App</a>
         </div>
     </div>
-
     {% else %}
-    <header class="bg-blue-900 text-white px-6 py-4 shadow-md sticky top-0 z-30 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-2xl">admin_panel_settings</span>
-            <div>
-                <h1 class="text-base font-bold">Admin Master Control</h1>
-                <p class="text-[11px] text-blue-200">Total Registered Students: {{ total_students }}</p>
-            </div>
+    <header class="bg-blue-900 text-white px-6 py-4 flex justify-between items-center shadow sticky top-0 z-20">
+        <div>
+            <h1 class="font-bold text-base">Admin Master Control</h1>
+            <p class="text-[10px] text-blue-200">Registered Students: {{ total_students }}</p>
         </div>
-        <div class="flex items-center gap-3">
-            <a href="/" target="_blank" class="bg-blue-800 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">visibility</span> View App
-            </a>
-            <a href="/admin/logout" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1.5 rounded-lg">Logout</a>
+        <div class="flex items-center gap-2">
+            <a href="/" target="_blank" class="bg-blue-800 text-xs px-3 py-1.5 rounded">View App</a>
+            <a href="/admin/logout" class="bg-red-600 text-xs px-3 py-1.5 rounded">Logout</a>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-        <!-- Live Class Setup -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-            <h2 class="text-base font-bold text-red-600 flex items-center gap-1.5 mb-3">
-                <span class="material-symbols-outlined">live_tv</span> Live Stream / Class Setup
-            </h2>
-            <form method="POST" class="space-y-3">
-                <input type="hidden" name="action" value="update_live">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Live Class Topic / Title:</label>
-                    <input type="text" name="live_title" value="{{ config.live_title }}" class="w-full border rounded-lg p-2.5 text-xs" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">YouTube Link (Unlisted/Live):</label>
-                    <input type="text" name="live_url" value="{{ config.live_url }}" class="w-full border rounded-lg p-2.5 text-xs" required>
-                </div>
-                <div class="flex items-center gap-2 pt-1">
-                    <input type="checkbox" name="is_live" id="is_live" {% if config.is_live %}checked{% endif %} class="w-4 h-4 text-blue-600">
-                    <label for="is_live" class="text-xs font-semibold text-slate-700">Live Video Student App me dikhayein</label>
-                </div>
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg">Update Live Stream</button>
+    <main class="max-w-3xl mx-auto p-4 space-y-6">
+
+        <!-- 1. SLIDER IMAGES MANAGER (Ab code change karne ki zaroorat nahi) -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="font-bold text-amber-700 flex items-center gap-1.5 text-base">
+                    <span class="material-symbols-outlined">view_carousel</span> Banner Slider Images Manager
+                </h2>
+                <span class="text-xs font-bold text-slate-500">Total: {{ config.slider_images|length }}/10</span>
+            </div>
+
+            <!-- Add New Image Form -->
+            <form method="POST" class="flex gap-2 mb-4">
+                <input type="hidden" name="action" value="add_slider_img">
+                <input type="url" name="img_url" placeholder="Nayi Image ka direct URL paste karein (https://...)" class="flex-grow border rounded-lg p-2 text-xs" required>
+                <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-2 rounded-lg text-xs">
+                    + Add Slide
+                </button>
             </form>
+
+            <!-- Active Slides Preview & Delete -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {% for img in config.slider_images %}
+                <div class="relative border rounded-xl overflow-hidden group bg-slate-50 shadow-sm">
+                    <img src="{{ img }}" class="w-full aspect-[16/9] object-cover" alt="Slide {{ loop.index }}">
+                    <div class="p-2 flex items-center justify-between bg-white text-[11px]">
+                        <span class="font-bold text-slate-600">Slide {{ loop.index }}</span>
+                        <form method="POST" onsubmit="return confirm('Kya aap is slide ko delete karna chahte hain?');">
+                            <input type="hidden" name="action" value="delete_slider_img">
+                            <input type="hidden" name="img_index" value="{{ loop.index0 }}">
+                            <button type="submit" class="text-rose-600 hover:text-rose-800 font-bold">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-xs text-slate-400 col-span-3">Koi image add nahi hai. Welcome card dikhega.</p>
+                {% endfor %}
+            </div>
         </div>
 
-        <!-- Course & Coupon Manager -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-            <h2 class="text-base font-bold text-indigo-700 flex items-center gap-1.5 mb-3">
-                <span class="material-symbols-outlined">local_offer</span> Course Discount & Coupon Codes
+        <!-- 2. Course Coupon & Price Manager -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="font-bold text-indigo-700 flex items-center gap-1.5 mb-3 text-base">
+                <span class="material-symbols-outlined">local_offer</span> Course Price & Coupon Codes
             </h2>
             <div class="space-y-3">
                 {% for c in courses %}
-                <form method="POST" class="flex flex-wrap md:flex-nowrap items-center gap-3 p-3 border rounded-xl bg-slate-50 text-xs">
+                <form method="POST" class="flex flex-wrap sm:flex-nowrap items-center gap-2 p-2.5 border rounded-xl bg-slate-50 text-xs">
                     <input type="hidden" name="action" value="update_course">
                     <input type="hidden" name="course_id" value="{{ c.id }}">
-                    <div class="w-full md:w-1/3">
-                        <p class="font-bold text-slate-800">{{ c.title }}</p>
-                        <p class="text-[10px] text-slate-400">{{ c.badge }}</p>
+                    <div class="w-full sm:w-1/3">
+                        <p class="font-bold text-slate-800 truncate">{{ c.title }}</p>
+                        <span class="text-[10px] text-slate-400">{{ c.badge }}</span>
                     </div>
-                    <div class="w-1/3 md:w-24">
-                        <label class="text-[10px] text-slate-500 block">Price (₹):</label>
+                    <div class="w-1/3 sm:w-24">
+                        <label class="text-[10px] text-slate-500 block">Price (₹)</label>
                         <input type="number" name="price" value="{{ c.price }}" class="w-full border rounded p-1.5 text-xs font-bold" required>
                     </div>
-                    <div class="w-1/3 md:w-28">
-                        <label class="text-[10px] text-slate-500 block">Discount Tag:</label>
-                        <input type="text" name="discount" value="{{ c.discount }}" class="w-full border rounded p-1.5 text-xs">
-                    </div>
-                    <div class="w-1/3 md:w-28">
-                        <label class="text-[10px] text-slate-500 block">Coupon Code:</label>
+                    <div class="w-1/3 sm:w-28">
+                        <label class="text-[10px] text-slate-500 block">Coupon</label>
                         <input type="text" name="coupon" value="{{ c.coupon }}" placeholder="DISCOUNT50" class="w-full border rounded p-1.5 text-xs uppercase font-mono">
                     </div>
-                    <div class="w-full md:w-auto mt-2 md:mt-4">
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs">Save</button>
+                    <div class="w-full sm:w-auto mt-2 sm:mt-4">
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Save</button>
                     </div>
                 </form>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Create Test Series -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-            <h2 class="text-base font-bold text-green-700 flex items-center gap-1.5 mb-3">
-                <span class="material-symbols-outlined">add_task</span> Create New Test Series
+        <!-- 3. Live Class Setup -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="font-bold text-red-600 mb-3 flex items-center gap-1.5 text-base">
+                <span class="material-symbols-outlined">live_tv</span> Live Class YouTube Link
             </h2>
-            <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <input type="hidden" name="action" value="create_test">
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Test Title:</label>
-                    <input type="text" name="title" placeholder="Jaise: RPSC Special Edu Mock Test" class="w-full border rounded-lg p-2 text-xs" required>
+            <form method="POST" class="space-y-3 text-xs">
+                <input type="hidden" name="action" value="update_live">
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Class Topic / Title:</label>
+                    <input type="text" name="live_title" value="{{ config.live_title }}" class="w-full border p-2 rounded-lg" required>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Duration (Minutes):</label>
-                    <input type="number" name="duration" value="30" class="w-full border rounded-lg p-2 text-xs" required>
+                    <label class="font-bold text-slate-700 block mb-1">YouTube Link:</label>
+                    <input type="text" name="live_url" value="{{ config.live_url }}" class="w-full border p-2 rounded-lg" required>
                 </div>
-                <div class="md:col-span-3">
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg">Create Test</button>
-                </div>
+                <label class="flex items-center gap-2">
+                    <input type="checkbox" name="is_live" {% if config.is_live %}checked{% endif %}> Live Stream Student App me dikhayein
+                </label>
+                <button type="submit" class="bg-red-600 text-white font-bold px-4 py-2 rounded-lg">Update Live Video</button>
             </form>
         </div>
 
-        <!-- Add Question to Test -->
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-            <h2 class="text-base font-bold text-blue-800 flex items-center gap-1.5 mb-3">
-                <span class="material-symbols-outlined">quiz</span> Add Question to a Test
+        <!-- 4. Add Test Series -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="font-bold text-green-700 mb-3 flex items-center gap-1.5 text-base">
+                <span class="material-symbols-outlined">add_task</span> Naya Test Banayein
+            </h2>
+            <form method="POST" class="flex gap-2 text-xs">
+                <input type="hidden" name="action" value="create_test">
+                <input type="text" name="title" placeholder="Test Name" class="w-2/3 border p-2 rounded-lg" required>
+                <input type="number" name="duration" value="30" placeholder="Duration (Min)" class="w-1/3 border p-2 rounded-lg" required>
+                <button type="submit" class="bg-green-600 text-white font-bold px-4 py-2 rounded-lg">Create</button>
+            </form>
+        </div>
+
+        <!-- 5. Add Questions to Test -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="font-bold text-blue-800 mb-3 flex items-center gap-1.5 text-base">
+                <span class="material-symbols-outlined">quiz</span> Test me Sawal Jodein
             </h2>
             <form method="POST" class="space-y-3 text-xs">
                 <input type="hidden" name="action" value="add_question">
                 <div>
-                    <label class="block font-bold text-slate-700 mb-1">Select Test:</label>
-                    <select name="test_id" class="w-full border rounded-lg p-2 text-xs font-semibold" required>
+                    <label class="font-bold text-slate-700 block mb-1">Select Test:</label>
+                    <select name="test_id" class="w-full border p-2 rounded-lg font-bold" required>
                         {% for t in tests %}
-                        <option value="{{ t.id }}">{{ t.title }} (Abhi {{ t.questions|length }} sawal)</option>
+                        <option value="{{ t.id }}">{{ t.title }} ({{ t.questions|length }} Sawal)</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Question Text:</label>
-                    <textarea name="question" rows="2" placeholder="Sawal yahan likhein..." class="w-full border rounded-lg p-2" required></textarea>
-                </div>
+                <textarea name="question" placeholder="Sawal likhein..." class="w-full border p-2 rounded-lg" required></textarea>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="text" name="opt_a" placeholder="Option (A)" class="border rounded p-2" required>
-                    <input type="text" name="opt_b" placeholder="Option (B)" class="border rounded p-2" required>
-                    <input type="text" name="opt_c" placeholder="Option (C)" class="border rounded p-2" required>
-                    <input type="text" name="opt_d" placeholder="Option (D)" class="border rounded p-2" required>
+                    <input type="text" name="opt_a" placeholder="Option A" class="border p-2 rounded" required>
+                    <input type="text" name="opt_b" placeholder="Option B" class="border p-2 rounded" required>
+                    <input type="text" name="opt_c" placeholder="Option C" class="border p-2 rounded" required>
+                    <input type="text" name="opt_d" placeholder="Option D" class="border p-2 rounded" required>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Correct Option:</label>
-                        <select name="answer" class="w-full border rounded p-2 font-bold uppercase" required>
-                            <option value="a">A</option>
-                            <option value="b">B</option>
-                            <option value="c">C</option>
-                            <option value="d">D</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Solution / Explanation:</label>
-                        <input type="text" name="solution" placeholder="Puri vyakhya..." class="w-full border rounded p-2">
-                    </div>
+                <div class="flex gap-2">
+                    <select name="answer" class="border p-2 rounded uppercase w-1/3 font-bold" required>
+                        <option value="a">A</option><option value="b">B</option><option value="c">C</option><option value="d">D</option>
+                    </select>
+                    <input type="text" name="solution" placeholder="Vyakhya / Explanation" class="border p-2 rounded w-2/3">
                 </div>
-                <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-lg">Add Question</button>
+                <button type="submit" class="bg-blue-700 text-white font-bold px-4 py-2 rounded-lg">Sawal Add Karein</button>
             </form>
         </div>
+
     </main>
     {% endif %}
 
 </body>
-    </html>
-    
+            </html>
+                            
