@@ -24,7 +24,7 @@
             {% endif %}
             <form method="POST" class="space-y-4">
                 <input type="hidden" name="action" value="login">
-                <input type="password" name="password" placeholder="Enter Admin Password" class="w-full border rounded-xl p-3 text-sm focus:outline-blue-600" required>
+                <input type="password" name="password" placeholder="Enter Admin Password (admin123)" class="w-full border rounded-xl p-3 text-sm focus:outline-blue-600" required>
                 <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl text-sm transition">
                     Unlock Dashboard
                 </button>
@@ -51,19 +51,130 @@
     </header>
 
     <main class="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
-        <!-- Live Class Control Module -->
-        {% include 'admin_modules/live_control.html' %}
+        <!-- Live Class Setup -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h2 class="text-base font-bold text-red-600 flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined">live_tv</span> Live Stream / Class Setup
+            </h2>
+            <form method="POST" class="space-y-3">
+                <input type="hidden" name="action" value="update_live">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Live Class Topic / Title:</label>
+                    <input type="text" name="live_title" value="{{ config.live_title }}" class="w-full border rounded-lg p-2.5 text-xs" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">YouTube Link (Unlisted/Live):</label>
+                    <input type="text" name="live_url" value="{{ config.live_url }}" class="w-full border rounded-lg p-2.5 text-xs" required>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" name="is_live" id="is_live" {% if config.is_live %}checked{% endif %} class="w-4 h-4 text-blue-600">
+                    <label for="is_live" class="text-xs font-semibold text-slate-700">Live Video Student App me dikhayein</label>
+                </div>
+                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg">Update Live Stream</button>
+            </form>
+        </div>
 
-        <!-- Course & Coupon Control Module -->
-        {% include 'admin_modules/course_control.html' %}
+        <!-- Course & Coupon Manager -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h2 class="text-base font-bold text-indigo-700 flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined">local_offer</span> Course Discount & Coupon Codes
+            </h2>
+            <div class="space-y-3">
+                {% for c in courses %}
+                <form method="POST" class="flex flex-wrap md:flex-nowrap items-center gap-3 p-3 border rounded-xl bg-slate-50 text-xs">
+                    <input type="hidden" name="action" value="update_course">
+                    <input type="hidden" name="course_id" value="{{ c.id }}">
+                    <div class="w-full md:w-1/3">
+                        <p class="font-bold text-slate-800">{{ c.title }}</p>
+                        <p class="text-[10px] text-slate-400">{{ c.badge }}</p>
+                    </div>
+                    <div class="w-1/3 md:w-24">
+                        <label class="text-[10px] text-slate-500 block">Price (₹):</label>
+                        <input type="number" name="price" value="{{ c.price }}" class="w-full border rounded p-1.5 text-xs font-bold" required>
+                    </div>
+                    <div class="w-1/3 md:w-28">
+                        <label class="text-[10px] text-slate-500 block">Discount Tag:</label>
+                        <input type="text" name="discount" value="{{ c.discount }}" class="w-full border rounded p-1.5 text-xs">
+                    </div>
+                    <div class="w-1/3 md:w-28">
+                        <label class="text-[10px] text-slate-500 block">Coupon Code:</label>
+                        <input type="text" name="coupon" value="{{ c.coupon }}" placeholder="DISCOUNT50" class="w-full border rounded p-1.5 text-xs uppercase font-mono">
+                    </div>
+                    <div class="w-full md:w-auto mt-2 md:mt-4">
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs">Save</button>
+                    </div>
+                </form>
+                {% endfor %}
+            </div>
+        </div>
 
-        <!-- Test Creator Module -->
-        {% include 'admin_modules/test_creator.html' %}
+        <!-- Create Test Series -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h2 class="text-base font-bold text-green-700 flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined">add_task</span> Create New Test Series
+            </h2>
+            <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="hidden" name="action" value="create_test">
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Test Title:</label>
+                    <input type="text" name="title" placeholder="Jaise: RPSC Special Edu Mock Test" class="w-full border rounded-lg p-2 text-xs" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Duration (Minutes):</label>
+                    <input type="number" name="duration" value="30" class="w-full border rounded-lg p-2 text-xs" required>
+                </div>
+                <div class="md:col-span-3">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-5 py-2.5 rounded-lg">Create Test</button>
+                </div>
+            </form>
+        </div>
 
-        <!-- Question Creator Module -->
-        {% include 'admin_modules/q_creator.html' %}
+        <!-- Add Question to Test -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h2 class="text-base font-bold text-blue-800 flex items-center gap-1.5 mb-3">
+                <span class="material-symbols-outlined">quiz</span> Add Question to a Test
+            </h2>
+            <form method="POST" class="space-y-3 text-xs">
+                <input type="hidden" name="action" value="add_question">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Select Test:</label>
+                    <select name="test_id" class="w-full border rounded-lg p-2 text-xs font-semibold" required>
+                        {% for t in tests %}
+                        <option value="{{ t.id }}">{{ t.title }} (Abhi {{ t.questions|length }} sawal)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Question Text:</label>
+                    <textarea name="question" rows="2" placeholder="Sawal yahan likhein..." class="w-full border rounded-lg p-2" required></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" name="opt_a" placeholder="Option (A)" class="border rounded p-2" required>
+                    <input type="text" name="opt_b" placeholder="Option (B)" class="border rounded p-2" required>
+                    <input type="text" name="opt_c" placeholder="Option (C)" class="border rounded p-2" required>
+                    <input type="text" name="opt_d" placeholder="Option (D)" class="border rounded p-2" required>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Correct Option:</label>
+                        <select name="answer" class="w-full border rounded p-2 font-bold uppercase" required>
+                            <option value="a">A</option>
+                            <option value="b">B</option>
+                            <option value="c">C</option>
+                            <option value="d">D</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Solution / Explanation:</label>
+                        <input type="text" name="solution" placeholder="Puri vyakhya..." class="w-full border rounded p-2">
+                    </div>
+                </div>
+                <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold px-5 py-2.5 rounded-lg">Add Question</button>
+            </form>
+        </div>
     </main>
     {% endif %}
 
 </body>
-</html>
+    </html>
+    
