@@ -1,0 +1,30 @@
+<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-slate-100">
+    <div class="flex items-center gap-3">
+        <button onclick="openModal('updates')" class="text-slate-700 hover:text-blue-900 focus:outline-none flex items-center">
+            <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+        <span class="text-base font-semibold text-slate-800 tracking-tight lowercase">special education needs</span>
+    </div>
+    <div class="flex items-center gap-2">
+        {% if student %}
+        <a href="/logout" title="Logout" class="text-[11px] bg-slate-100 text-slate-600 font-bold px-2.5 py-1 rounded-md border">Logout</a>
+        {% else %}
+        <a href="/login" class="text-xs bg-blue-600 text-white font-bold px-3 py-1 rounded-md shadow-sm">Login</a>
+        {% endif %}
+        <a href="/admin" title="Admin Panel" class="text-xs bg-blue-50 text-blue-700 font-bold px-2 py-1 rounded-md border border-blue-200">Admin</a>
+        <div class="relative cursor-pointer" onclick="openModal('notifications')">
+            <span class="material-symbols-outlined text-slate-700 text-2xl">notifications</span>
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">8</span>
+        </div>
+    </div>
+</header>
+
+<div class="max-w-lg mx-auto px-4 pt-3">
+    {% if student %}
+    <h2 class="text-xl font-bold text-slate-900">Hello, {{ student.name }}</h2>
+    <p class="text-xs text-slate-500">Welcome to Special Education Learning Hub</p>
+    {% else %}
+    <h2 class="text-xl font-bold text-slate-900">Hello, Neetu Meena</h2>
+    <p class="text-xs text-slate-500">Welcome to Special Education Learning Hub</p>
+    {% endif %}
+</div>
