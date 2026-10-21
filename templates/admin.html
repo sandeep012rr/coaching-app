@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow">
+            <h1 class="text-xl font-bold text-gray-800">Admin Control Panel</h1>
+            <a href="/" class="text-blue-600 font-semibold text-sm">&larr; Student Portal</a>
+        </div>
+
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="text-lg font-bold mb-3 text-red-600">📺 Live Class Control</h2>
+            <form method="POST" class="space-y-3">
+                <input type="hidden" name="action" value="update_live">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Class Title:</label>
+                    <input type="text" name="live_title" value="{{ config.live_title }}" class="w-full border rounded p-2 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">YouTube Video Link (Unlisted):</label>
+                    <input type="text" name="live_url" value="{{ config.live_url }}" class="w-full border rounded p-2 text-sm" required>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" name="is_live" id="is_live" {% if config.is_live %}checked{% endif %}>
+                    <label for="is_live" class="text-sm font-semibold">Live class dikhayein</label>
+                </div>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold">Save Live Class</button>
+            </form>
+        </div>
+
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="text-lg font-bold mb-3 text-green-700">📝 Naya Test Add Karein</h2>
+            <form method="POST" class="space-y-3">
+                <input type="hidden" name="action" value="create_test">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Test Name:</label>
+                    <input type="text" name="title" placeholder="Jaise: RPwD Act Mock Test 01" class="w-full border rounded p-2 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Duration (Minutes):</label>
+                    <input type="number" name="duration" value="30" class="w-full border rounded p-2 text-sm" required>
+                </div>
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded text-sm font-semibold">Create Test</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
