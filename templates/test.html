@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ test.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 select-none pb-10">
+    <div class="bg-blue-900 text-white p-3 flex justify-between items-center shadow">
+        <h2 class="font-bold text-md">{{ test.title }}</h2>
+        <div class="bg-red-600 px-3 py-1 rounded font-mono font-bold text-sm">⏱️ <span id="timer">{{ test.duration }}:00</span></div>
+    </div>
+
+    <div class="max-w-2xl mx-auto p-4 mt-4 bg-white rounded-xl shadow space-y-5">
+        <div id="quiz-container">
+            <h3 class="text-md font-semibold text-slate-800" id="q-text">Sawal load ho raha hai...</h3>
+            <div class="space-y-2 mt-4" id="options-box"></div>
+
+            <div class="flex justify-between items-center mt-6 pt-4 border-t">
+                <button id="prev-btn" onclick="prevQ()" class="bg-slate-200 text-slate-700 px-4 py-2 rounded font-semibold text-sm">Previous</button>
+                <button id="next-btn" onclick="nextQ()" class="bg-blue-600 text-white px-6 py-2 rounded font-semibold text-sm">Next</button>
+                <button id="submit-btn" onclick="submitTest()" class="bg-green-600 text-white px-6 py-2 rounded font-semibold text-sm hidden">Submit Test</button>
+            </div>
+        </div>
+
+        <div id="result-box" class="hidden text-center py-6">
+            <h3 class="text-xl font-bold text-green-700">Test Completed!</h3>
+            <p class="text-lg text-slate-700 mt-2 font-bold" id="score-text"></p>
+            <a href="/" class="inline-block mt-4 bg-blue-600 text-white px-5 py-2 rounded text-sm font-semibold">Home</a>
+        </div>
+    </div>
+
+    <script>
+        const testData = {{ test.questions|tojson|safe }};
+        let currentIdx = 0;
+        let userAnswers = {};
+
+        function renderQuestion() {
+            if (!testData || testData.length === 0) {
+                document.getElementById('q-text').innerText = "Is test me koi sawal nahi hai.";
+                return;
+            }
+            const q = testData[currentIdx];
+            document.getElementById('q-text').innerText = `Q${currentIdx + 1}. ${q.question}`;
+            
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const optKey = ['a', 'b', 'c', 'd'][idx];
+                const checked = userAnswers[currentIdx] === optKey ? 'bg-blue-100 border-blue-600 font-bold' : 'border-slate-200';
+                box.innerHTML += `
+                    <div onclick="selectOpt('${optKey}')" class="p-3 border rounded-lg cursor-pointer hover:bg-slate-50 text-sm ${checked}">
+                        <span class="uppercase font-bold mr-2">(${optKey})</span> ${opt}
+                    </div>
+                `;
+            });
+
+            document.getElementById('prev-btn').style.display = currentIdx === 0 ? 'none' : 'block';
+            if (currentIdx === testData.length - 1) {
+                document.getElementById('next-btn').style.display = 'none';
+                document.getElementById('submit-btn').style.display = 'block';
+            } else {
+                document.getElementById('next-btn').style.display = 'block';
+                document.getElementById('submit-btn').style.display = 'none';
+            }
+        }
+
+        function selectOpt(key) {
+            userAnswers[currentIdx] = key;
+            renderQuestion();
+        }
+
+        function nextQ() {
+            if (currentIdx < testData.length - 1) { currentIdx++; renderQuestion(); }
+        }
+
+        function prevQ() {
+            if (currentIdx > 0) { currentIdx--; renderQuestion(); }
+        }
+
+        function submitTest() {
+            let correct = 0;
+            testData.forEach((q, idx) => {
+                if (userAnswers[idx] && userAnswers[idx].toLowerCase() === q.answer.toLowerCase()) {
+                    correct++;
+                }
+            });
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-box').classList.remove('hidden');
+            document.getElementById('score-text').innerText = `Score: ${correct} / ${testData.length}`;
+        }
+
+        renderQuestion();
+    </script>
+</body>
+</html>
