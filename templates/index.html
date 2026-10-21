@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f6f7fb; -webkit-tap-highlight-color: transparent; }
         .app-card { box-shadow: 0 4px 14px rgba(44, 62, 107, 0.08); border: 1.5px solid #edf2f9; transition: all 0.2s ease; }
@@ -16,27 +15,8 @@
 </head>
 <body class="pb-24">
 
-    <!-- Top App Bar -->
-    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-slate-100">
-        <div class="flex items-center gap-3">
-            <button onclick="openModal('updates')" class="text-slate-700 hover:text-blue-900 focus:outline-none flex items-center">
-                <span class="material-symbols-outlined text-2xl">menu</span>
-            </button>
-            <span class="text-base font-semibold text-slate-800 tracking-tight lowercase">special education needs</span>
-        </div>
-        <div class="flex items-center gap-2">
-            {% if student %}
-            <a href="/logout" title="Logout" class="text-[11px] bg-slate-100 text-slate-600 font-bold px-2.5 py-1 rounded-md border">Logout</a>
-            {% else %}
-            <a href="/login" class="text-xs bg-blue-600 text-white font-bold px-3 py-1 rounded-md shadow-sm">Login</a>
-            {% endif %}
-            <a href="/admin" title="Admin Panel" class="text-xs bg-blue-50 text-blue-700 font-bold px-2 py-1 rounded-md border border-blue-200">Admin</a>
-            <div class="relative cursor-pointer" onclick="openModal('notifications')">
-                <span class="material-symbols-outlined text-slate-700 text-2xl">notifications</span>
-                <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">8</span>
-            </div>
-        </div>
-    </header>
+    <!-- Top Bar Component -->
+    {% include 'components/top_bar.html' %}
 
     <main class="max-w-lg mx-auto px-4 pt-3 space-y-4">
 
@@ -44,34 +24,16 @@
         <div>
             {% if student %}
             <h2 class="text-xl font-bold text-slate-900">Hello, {{ student.name }}</h2>
-            <p class="text-xs text-slate-500">Welcome to Special Education Learning Hub</p>
             {% else %}
             <h2 class="text-xl font-bold text-slate-900">Hello, Neetu Meena</h2>
-            <p class="text-xs text-slate-500">Welcome to Special Education Learning Hub</p>
             {% endif %}
+            <p class="text-xs text-slate-500">Welcome to Special Education Learning Hub</p>
         </div>
 
-        <!-- Banner -->
-        <div class="relative rounded-2xl overflow-hidden shadow-sm bg-gradient-to-r from-amber-50 via-white to-blue-50 border border-amber-200/60 p-4">
-            <div class="flex items-center gap-2 mb-1">
-                <span class="bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider">Welcome</span>
-                <p class="text-xs font-semibold text-amber-800">आप सभी का परिवार में स्वागत है!</p>
-            </div>
-            <h3 class="text-sm font-bold text-slate-900 leading-snug">SPECIAL EDUCATION NEEDS</h3>
-            <p class="text-[11px] text-slate-600 mt-1 leading-normal">
-                हम आपके हर कदम में साथ हैं! RPSC, DSSSB, REET और KVS Special Education भर्ती परीक्षा की सम्पूर्ण तैयारी।
-            </p>
-            <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-200/60 text-xs">
-                <a href="tel:9828625119" class="flex items-center gap-1 font-bold text-blue-700 hover:underline">
-                    <span class="material-symbols-outlined text-base">call</span> 9828625119
-                </a>
-                <a href="https://whatsapp.com/channel/0029VbBrZUT6LwHeVGFnvl3Q" target="_blank" class="flex items-center gap-1 font-bold text-emerald-600 hover:underline">
-                    <span class="material-symbols-outlined text-base">group</span> WhatsApp Channel
-                </a>
-            </div>
-        </div>
+        <!-- Image Slider Component -->
+        {% include 'components/banner_slider.html' %}
 
-        <!-- Live Video (If Active) -->
+        <!-- Live Stream Video (Agar active ho) -->
         {% if config.is_live %}
         <div class="bg-white rounded-2xl shadow-sm p-3.5 border border-red-100">
             <div class="flex items-center justify-between mb-2">
@@ -79,127 +41,30 @@
                     <span class="w-2.5 h-2.5 bg-red-600 rounded-full animate-ping"></span>
                     <span class="text-xs font-bold text-red-600 uppercase tracking-wide">Live Stream</span>
                 </div>
-                <span class="text-[11px] text-slate-400">Tap to watch</span>
             </div>
             <p class="text-xs font-semibold text-slate-800 mb-2 truncate">{{ config.live_title }}</p>
             <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner">
-                <div class="absolute top-0 left-0 w-full h-12 z-20 bg-transparent"></div>
-                <div class="absolute bottom-0 right-0 w-24 h-12 z-20 bg-transparent"></div>
-                <iframe class="w-full h-full relative z-10" src="{{ config.live_url }}?modestbranding=1&rel=0&controls=1&showinfo=0" frameborder="0" allowfullscreen></iframe>
+                <iframe class="w-full h-full" src="{{ config.live_url }}" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
         {% endif %}
 
-        <!-- 12 App Icons Grid -->
-        <div class="grid grid-cols-3 gap-3 pt-1">
-            <div onclick="openCoursesModal()" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2 border border-blue-100">
-                    <span class="material-symbols-outlined text-2xl">school</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">Courses</span>
-            </div>
+        <!-- 12 Buttons Grid Component -->
+        {% include 'components/grid_menu.html' %}
 
-            <div onclick="openModal('timetable')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2 border border-indigo-100">
-                    <span class="material-symbols-outlined text-2xl">calendar_month</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">MY Timetable</span>
-            </div>
-
-            <div onclick="openModal('updates')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2 border border-amber-100">
-                    <span class="material-symbols-outlined text-2xl">newspaper</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">Latest update</span>
-            </div>
-
-            <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mb-2 border border-red-100">
-                    <span class="material-symbols-outlined text-2xl">smart_display</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800 leading-tight">Youtube classes</span>
-            </div>
-
-            <div onclick="openModal('notes')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-2 border border-rose-100">
-                    <span class="material-symbols-outlined text-2xl">picture_as_pdf</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">Notes & PDFs</span>
-            </div>
-
-            <div onclick="scrollToTests()" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mb-2 border border-teal-100">
-                    <span class="material-symbols-outlined text-2xl">quiz</span>
-                </div>
-                <span class="text-xs font-semibold text-blue-900">Test Series</span>
-            </div>
-
-            <div onclick="openModal('ebooks')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2 border border-purple-100">
-                    <span class="material-symbols-outlined text-2xl">menu_book</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">E-Book</span>
-            </div>
-
-            <div onclick="scrollToTests()" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mb-2 border border-sky-100">
-                    <span class="material-symbols-outlined text-2xl">assignment_turned_in</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">Quiz</span>
-            </div>
-
-            <a href="tel:9828625119" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2 border border-emerald-100">
-                    <span class="material-symbols-outlined text-2xl">support_agent</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800 leading-tight">Contact & Help</span>
-            </a>
-
-            <div onclick="openModal('blog')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mb-2 border border-cyan-100">
-                    <span class="material-symbols-outlined text-2xl">article</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800">Blog</span>
-            </div>
-
-            <div onclick="openModal('current_affairs')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-2 border border-orange-100">
-                    <span class="material-symbols-outlined text-2xl">public</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800 leading-tight">Current Affairs</span>
-            </div>
-
-            <div onclick="openModal('mentorship')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
-                <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-2 border border-violet-100">
-                    <span class="material-symbols-outlined text-2xl">group</span>
-                </div>
-                <span class="text-xs font-medium text-slate-800 leading-tight">1 to 1 section</span>
-            </div>
-        </div>
-
-        <!-- CBT Test Series Section -->
+        <!-- Active Test Series List -->
         <div id="test-series-anchor" class="pt-2">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-base font-bold text-slate-800 flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-blue-700">fact_check</span> Active Test Series
-                </h3>
-                <span class="text-xs text-blue-700 font-semibold">{{ tests|length }} Tests</span>
-            </div>
-
+            <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-blue-700">fact_check</span> Active Test Series
+            </h3>
             <div class="space-y-2.5">
                 {% for test in tests %}
                 <div class="bg-white rounded-xl p-3.5 border border-slate-200/80 shadow-sm flex items-center justify-between">
                     <div>
                         <h4 class="text-sm font-bold text-slate-900">{{ test.title }}</h4>
-                        <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
-                            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">timer</span> {{ test.duration }} Min</span>
-                            <span>•</span>
-                            <span>{{ test.questions|length }} Sawal</span>
-                        </div>
+                        <p class="text-xs text-slate-500 mt-1">⏱️ {{ test.duration }} Min | {{ test.questions|length }} Sawal</p>
                     </div>
-                    <a href="/test/{{ test.id }}" class="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm">
-                        Start Test
-                    </a>
+                    <a href="/test/{{ test.id }}" class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg">Start Test</a>
                 </div>
                 {% else %}
                 <div class="bg-white p-6 rounded-xl text-center text-xs text-slate-400 border border-dashed border-slate-200">
@@ -210,101 +75,15 @@
         </div>
     </main>
 
-    <!-- Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2">
-        <div class="max-w-lg mx-auto flex items-center justify-between text-slate-500">
-            <a href="/" class="flex flex-col items-center gap-0.5 text-blue-700">
-                <span class="material-symbols-outlined text-2xl">home</span>
-                <span class="text-[10px] font-semibold">Home</span>
-            </a>
-            <div onclick="scrollToTests()" class="flex flex-col items-center gap-0.5 cursor-pointer hover:text-blue-700">
-                <span class="material-symbols-outlined text-2xl">assignment</span>
-                <span class="text-[10px] font-medium">Tests</span>
-            </div>
-            <div onclick="openCoursesModal()" class="flex flex-col items-center gap-0.5 cursor-pointer hover:text-blue-700">
-                <span class="material-symbols-outlined text-2xl">school</span>
-                <span class="text-[10px] font-medium">Courses</span>
-            </div>
-            <div onclick="openModal('doubt')" class="flex flex-col items-center gap-0.5 cursor-pointer hover:text-blue-700">
-                <span class="material-symbols-outlined text-2xl">forum</span>
-                <span class="text-[10px] font-medium">Doubt AI</span>
-            </div>
-        </div>
-    </nav>
+    <!-- Bottom Navigation Component -->
+    {% include 'components/bottom_bar.html' %}
 
-    <!-- Courses Modal -->
-    <div id="courses-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
-        <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-blue-700">school</span>
-                    <h3 class="font-bold text-slate-800 text-base">All Special Education Courses</h3>
-                </div>
-                <button onclick="closeCoursesModal()" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-lg">close</span>
-                </button>
-            </div>
+    <!-- Courses Popup Component -->
+    {% include 'components/courses_popup.html' %}
 
-            <div class="p-4 overflow-y-auto space-y-3.5">
-                {% for c in courses %}
-                <div class="border border-slate-200 rounded-xl p-3.5 bg-white shadow-sm flex flex-col gap-2">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">{{ c.badge }}</span>
-                            <h4 class="font-bold text-slate-900 text-sm mt-1">{{ c.title }}</h4>
-                            {% if c.coupon %}
-                            <p class="text-[10px] text-indigo-700 font-bold mt-0.5 bg-indigo-50 px-2 py-0.5 rounded inline-block">
-                                🎟️ Coupon: {{ c.coupon }}
-                            </p>
-                            {% endif %}
-                        </div>
-                        <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">{{ c.discount }}</span>
-                    </div>
-                    <div class="flex items-center justify-between pt-1">
-                        <div class="flex items-center gap-2">
-                            <span class="text-base font-extrabold text-slate-900">₹ {{ c.price }}</span>
-                            <span class="text-xs text-slate-400 line-through">₹ {{ c.orig_price }}</span>
-                        </div>
-                        <a href="https://wa.me/919828625119?text=Mujhe%20{{ c.title }}%20Join%20karna%20hai{% if c.coupon %}%20Coupon:{{ c.coupon }}{% endif %}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-1.5 rounded-lg shadow-sm">
-                            Join Now
-                        </a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+    <!-- Popups Info Component -->
+    {% include 'components/popups.html' %}
 
-    <!-- Info Modal -->
-    <div id="info-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b pb-2">
-                <h4 id="modal-title" class="font-bold text-slate-800 text-base">Section</h4>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700">
-                    <span class="material-symbols-outlined">close</span>
-                </button>
-            </div>
-            <div id="modal-body" class="text-xs text-slate-600 space-y-2 max-h-60 overflow-y-auto"></div>
-            <button onclick="closeModal()" class="w-full bg-blue-600 text-white text-xs font-bold py-2.5 rounded-xl">Close</button>
-        </div>
-    </div>
+</body>
+                    </html>
 
-    <script>
-        function openCoursesModal() { document.getElementById('courses-modal').classList.remove('hidden'); }
-        function closeCoursesModal() { document.getElementById('courses-modal').classList.add('hidden'); }
-        function scrollToTests() {
-            const el = document.getElementById('test-series-anchor');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-        function openModal(type) {
-            const modal = document.getElementById('info-modal');
-            const title = document.getElementById('modal-title');
-            const body = document.getElementById('modal-body');
-
-            const data = {
-                'timetable': {
-                    t: '📅 Daily Live Class Timetable',
-                    b: '<p>• <b>10:00 AM:</b> RPwD Act & Legal Provisions</p><p>• <b>02:00 PM:</b> Special Pedagogy & UDL</p><p>• <b>08:00 PM:</b> Daily 50 MCQ CBT Mock Test</p>'
-                },
-                'updates': {
-                    t: '📢 Latest Exam 
