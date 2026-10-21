@@ -1,0 +1,20 @@
+<nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2">
+    <div class="max-w-lg mx-auto flex items-center justify-between text-slate-500">
+        <a href="/" class="flex flex-col items-center gap-0.5 text-blue-700">
+            <span class="material-symbols-outlined text-2xl">home</span>
+            <span class="text-[10px] font-semibold">Home</span>
+        </a>
+        <div onclick="document.getElementById('test-series-anchor').scrollIntoView({behavior: 'smooth'})" class="flex flex-col items-center gap-0.5 cursor-pointer hover:text-blue-700">
+            <span class="material-symbols-outlined text-2xl">assignment</span>
+            <span class="text-[10px] font-medium">Tests</span>
+        </div>
+        <div onclick="openCoursesModal()" class="flex flex-col items-center gap-0.5 cursor-pointer hover:text-blue-700">
+            <span class="material-symbols-outlined text-2xl">school</span>
+            <span class="text-[10px] font-medium">Courses</span>
+        </div>
+        <div onclick="openModal('Doubt AI', 'Special Education ke sawalon ke liye helpline par WhatsApp karein: <b>9828625119</b>')" class="flex flex-col items-center gap-0.5 cursor-pointer hover:text-blue-700">
+            <span class="material-symbols-outlined text-2xl">forum</span>
+            <span class="text-[10px] font-medium">Doubt AI</span>
+        </div>
+    </div>
+</nav>
