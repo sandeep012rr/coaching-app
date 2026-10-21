@@ -4,27 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>special education needs</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts & Material Symbols Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f6f7fb;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .app-card {
-            box-shadow: 0 4px 14px rgba(44, 62, 107, 0.08);
-            border: 1.5px solid #edf2f9;
-            transition: all 0.2s ease;
-        }
-        .app-card:active {
-            transform: scale(0.95);
-            background-color: #f0f4ff;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f6f7fb; -webkit-tap-highlight-color: transparent; }
+        .app-card { box-shadow: 0 4px 14px rgba(44, 62, 107, 0.08); border: 1.5px solid #edf2f9; transition: all 0.2s ease; }
+        .app-card:active { transform: scale(0.95); background-color: #f0f4ff; }
     </style>
 </head>
 <body class="pb-24">
@@ -64,7 +51,7 @@
             {% endif %}
         </div>
 
-        <!-- Announcement Banner -->
+        <!-- Banner -->
         <div class="relative rounded-2xl overflow-hidden shadow-sm bg-gradient-to-r from-amber-50 via-white to-blue-50 border border-amber-200/60 p-4">
             <div class="flex items-center gap-2 mb-1">
                 <span class="bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider">Welcome</span>
@@ -84,7 +71,7 @@
             </div>
         </div>
 
-        <!-- Live Stream Embedded Player -->
+        <!-- Live Video (If Active) -->
         {% if config.is_live %}
         <div class="bg-white rounded-2xl shadow-sm p-3.5 border border-red-100">
             <div class="flex items-center justify-between mb-2">
@@ -105,8 +92,6 @@
 
         <!-- 12 App Icons Grid -->
         <div class="grid grid-cols-3 gap-3 pt-1">
-
-            <!-- 1. Courses -->
             <div onclick="openCoursesModal()" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2 border border-blue-100">
                     <span class="material-symbols-outlined text-2xl">school</span>
@@ -114,7 +99,6 @@
                 <span class="text-xs font-medium text-slate-800">Courses</span>
             </div>
 
-            <!-- 2. MY Timetable -->
             <div onclick="openModal('timetable')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-2 border border-indigo-100">
                     <span class="material-symbols-outlined text-2xl">calendar_month</span>
@@ -122,7 +106,6 @@
                 <span class="text-xs font-medium text-slate-800">MY Timetable</span>
             </div>
 
-            <!-- 3. Latest update -->
             <div onclick="openModal('updates')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2 border border-amber-100">
                     <span class="material-symbols-outlined text-2xl">newspaper</span>
@@ -130,7 +113,6 @@
                 <span class="text-xs font-medium text-slate-800">Latest update</span>
             </div>
 
-            <!-- 4. Youtube classes -->
             <div onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mb-2 border border-red-100">
                     <span class="material-symbols-outlined text-2xl">smart_display</span>
@@ -138,7 +120,6 @@
                 <span class="text-xs font-medium text-slate-800 leading-tight">Youtube classes</span>
             </div>
 
-            <!-- 5. Notes & PDFs -->
             <div onclick="openModal('notes')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-2 border border-rose-100">
                     <span class="material-symbols-outlined text-2xl">picture_as_pdf</span>
@@ -146,7 +127,6 @@
                 <span class="text-xs font-medium text-slate-800">Notes & PDFs</span>
             </div>
 
-            <!-- 6. Test Series -->
             <div onclick="scrollToTests()" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mb-2 border border-teal-100">
                     <span class="material-symbols-outlined text-2xl">quiz</span>
@@ -154,7 +134,6 @@
                 <span class="text-xs font-semibold text-blue-900">Test Series</span>
             </div>
 
-            <!-- 7. E-Book -->
             <div onclick="openModal('ebooks')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2 border border-purple-100">
                     <span class="material-symbols-outlined text-2xl">menu_book</span>
@@ -162,7 +141,6 @@
                 <span class="text-xs font-medium text-slate-800">E-Book</span>
             </div>
 
-            <!-- 8. Quiz -->
             <div onclick="scrollToTests()" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mb-2 border border-sky-100">
                     <span class="material-symbols-outlined text-2xl">assignment_turned_in</span>
@@ -170,7 +148,6 @@
                 <span class="text-xs font-medium text-slate-800">Quiz</span>
             </div>
 
-            <!-- 9. Contact & Help -->
             <a href="tel:9828625119" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2 border border-emerald-100">
                     <span class="material-symbols-outlined text-2xl">support_agent</span>
@@ -178,7 +155,6 @@
                 <span class="text-xs font-medium text-slate-800 leading-tight">Contact & Help</span>
             </a>
 
-            <!-- 10. Blog -->
             <div onclick="openModal('blog')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mb-2 border border-cyan-100">
                     <span class="material-symbols-outlined text-2xl">article</span>
@@ -186,7 +162,6 @@
                 <span class="text-xs font-medium text-slate-800">Blog</span>
             </div>
 
-            <!-- 11. Current Affairs -->
             <div onclick="openModal('current_affairs')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center mb-2 border border-orange-100">
                     <span class="material-symbols-outlined text-2xl">public</span>
@@ -194,17 +169,15 @@
                 <span class="text-xs font-medium text-slate-800 leading-tight">Current Affairs</span>
             </div>
 
-            <!-- 12. 1 to 1 section -->
             <div onclick="openModal('mentorship')" class="app-card bg-white rounded-2xl p-3 flex flex-col items-center justify-center text-center cursor-pointer min-h-[96px]">
                 <div class="w-12 h-12 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-2 border border-violet-100">
                     <span class="material-symbols-outlined text-2xl">group</span>
                 </div>
                 <span class="text-xs font-medium text-slate-800 leading-tight">1 to 1 section</span>
             </div>
-
         </div>
 
-        <!-- Online CBT Test Series List Section -->
+        <!-- CBT Test Series Section -->
         <div id="test-series-anchor" class="pt-2">
             <div class="flex items-center justify-between mb-3">
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-1.5">
@@ -235,10 +208,9 @@
                 {% endfor %}
             </div>
         </div>
-
     </main>
 
-    <!-- Bottom Navigation Bar -->
+    <!-- Bottom Nav -->
     <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2">
         <div class="max-w-lg mx-auto flex items-center justify-between text-slate-500">
             <a href="/" class="flex flex-col items-center gap-0.5 text-blue-700">
@@ -260,7 +232,7 @@
         </div>
     </nav>
 
-    <!-- Courses Popup Modal -->
+    <!-- Courses Modal -->
     <div id="courses-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
         <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-lg w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden">
             <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
@@ -303,7 +275,7 @@
         </div>
     </div>
 
-    <!-- Info Popup Modal -->
+    <!-- Info Modal -->
     <div id="info-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b pb-2">
@@ -312,19 +284,27 @@
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <div id="modal-body" class="text-xs text-slate-600 space-y-2 max-h-60 overflow-y-auto">
-                Content
-            </div>
-            <button onclick="closeModal()" class="w-full bg-blue-600 text-white text-xs font-bold py-2.5 rounded-xl">
-                Close
-            </button>
+            <div id="modal-body" class="text-xs text-slate-600 space-y-2 max-h-60 overflow-y-auto"></div>
+            <button onclick="closeModal()" class="w-full bg-blue-600 text-white text-xs font-bold py-2.5 rounded-xl">Close</button>
         </div>
     </div>
 
     <script>
-        function openCoursesModal() {
-            document.getElementById('courses-modal').classList.remove('hidden');
+        function openCoursesModal() { document.getElementById('courses-modal').classList.remove('hidden'); }
+        function closeCoursesModal() { document.getElementById('courses-modal').classList.add('hidden'); }
+        function scrollToTests() {
+            const el = document.getElementById('test-series-anchor');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
-        function closeCoursesModal() {
-            document.getElementById('courses-modal').classList.add('hidden');
-     
+        function openModal(type) {
+            const modal = document.getElementById('info-modal');
+            const title = document.getElementById('modal-title');
+            const body = document.getElementById('modal-body');
+
+            const data = {
+                'timetable': {
+                    t: '📅 Daily Live Class Timetable',
+                    b: '<p>• <b>10:00 AM:</b> RPwD Act & Legal Provisions</p><p>• <b>02:00 PM:</b> Special Pedagogy & UDL</p><p>• <b>08:00 PM:</b> Daily 50 MCQ CBT Mock Test</p>'
+                },
+                'updates': {
+                    t: '📢 Latest Exam 
